@@ -5,15 +5,18 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
-const { HoldingsModel } = require("./model/HoldingsModel");
 
+const { HoldingsModel } = require("./model/HoldingsModel");
 const { PositionsModel } = require("./model/PositionsModel");
 const { OrdersModel } = require("./model/OrdersModel");
 
 const PORT = process.env.PORT || 3002;
-const uri = process.env.MONGO_URL;
+const url = process.env.MONGO_URL;
 
 const app = express();
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -29,6 +32,7 @@ app.get("/allPositions", async (req, res) => {
 });
 
 app.post("/newOrder", async (req, res) => {
+  
   let newOrder = new OrdersModel({
     name: req.body.name,
     qty: req.body.qty,
@@ -36,8 +40,7 @@ app.post("/newOrder", async (req, res) => {
     mode: req.body.mode,
   });
 
-  newOrder.save();
-
+  await newOrder.save();
   res.send("Order saved!");
 });
 
@@ -47,7 +50,11 @@ app.get("/newOrder", async (req, res) => {
   });
 
 app.listen(PORT, () => {
-  console.log("App started!");
-  mongoose.connect(uri);
-  console.log("DB started!");
+  console.log(`server running on port ${PORT}`);
+  console.log("connecting to DB...");
+  
+  mongoose
+    .connect(url)
+    .then(() => console.log("MongoDB connected!"))
+    .catch((err) => console.log("MongoDB connection error:", err))
 });

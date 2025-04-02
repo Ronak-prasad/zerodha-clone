@@ -8,11 +8,13 @@ const Holdings = () => {
   const [allHoldings, setAllHoldings] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:3002/allHoldings").then((res) => {
-      // console.log(res.data);
-      setAllHoldings(res.data);
-    });
+    axios.get("https://zerodha-clone-backend-iebxy3hhf-ronaks-projects-6bb314c4.vercel.app/allHoldings")
+      .then((res) => {
+        setAllHoldings(res.data);
+      })
+      .catch((err) => console.error("Error fetching holdings:", err));
   }, []);
+  
 
   // const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
   const labels = allHoldings.map((subArray) => subArray["name"]);
