@@ -1,68 +1,68 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-
+import React, { useState, useContext, useEffect } from "react";
 import axios from "axios";
-
 import GeneralContext from "./GeneralContext";
+import "./BuyActionWindow.css"; // ✅ Ensure styles are applied
 
-import "./BuyActionWindow.css";
-
-const BuyActionWindow = ({ uid }) => {
+const BuyActionWindow = ({ uid, refreshOrders }) => {
+  const { closeBuyWindow } = useContext(GeneralContext);
   const [stockQuantity, setStockQuantity] = useState(1);
   const [stockPrice, setStockPrice] = useState(0.0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleBuyClick = () => {
-    axios.post("https://zerodha-clone-backend-z8u8.onrender.com/newOrder", {
-      name: uid,
-      qty: stockQuantity,
-      price: stockPrice,
-      mode: "BUY",
-    });
-    GeneralContext.closeBuyWindow();
-  };
+  useEffect(() => {
+    console.log("BuyActionWindow Rendered!"); // Debugging log
+  }, []);
 
-  const handleCancelClick = () => {
-    GeneralContext.closeBuyWindow();
+  const handleBuyClick = async () => {
+    setIsSubmitting(true);
+    try {
+      await axios.post("https://zerodha-clone-backend-z8u8.onrender.com/newOrder", {
+        name: uid,
+        qty: stockQuantity,
+        price: stockPrice,
+        mode: "BUY",
+      });
+
+      refreshOrders(); // ✅ Fetch new orders after placing order
+      closeBuyWindow(); // ✅ Ensure state update
+    } catch (error) {
+      console.error("Error placing order:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
-    <div className="container" id="buy-window" draggable="true">
+    <div className="buy-container"> {/* ✅ Changed class for CSS targeting */}
       <div className="regular-order">
         <div className="inputs">
           <fieldset>
             <legend>Qty.</legend>
             <input
               type="number"
-              name="qty"
-              id="qty"
-              onChange={(e) => setStockQuantity(e.target.value)}
               value={stockQuantity}
+              onChange={(e) => setStockQuantity(Number(e.target.value))}
+              disabled={isSubmitting} // ✅ Disable during submission
             />
           </fieldset>
           <fieldset>
             <legend>Price</legend>
             <input
               type="number"
-              name="price"
-              id="price"
-              step="0.05"
-              onChange={(e) => setStockPrice(e.target.value)}
               value={stockPrice}
+              onChange={(e) => setStockPrice(Number(e.target.value))}
+              disabled={isSubmitting} // ✅ Disable during submission
             />
           </fieldset>
         </div>
       </div>
-
       <div className="buttons">
-        <span>Margin required ₹140.65</span>
-        <div>
-          <Link className="btn btn-blue" onClick={handleBuyClick}>
-            Buy
-          </Link>
-          <Link to="" className="btn btn-grey" onClick={handleCancelClick}>
-            Cancel
-          </Link>
-        </div>
+        <button className="btn btn-blue" onClick={handleBuyClick} disabled={isSubmitting}>
+          {isSubmitting ? "Processing..." : "Buy"}
+        </button>
+        <button className="btn btn-grey" onClick={closeBuyWindow} disabled={isSubmitting}>
+          Cancel
+        </button>
       </div>
     </div>
   );
