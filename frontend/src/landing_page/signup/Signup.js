@@ -49,7 +49,7 @@ function Signup() {
 
         const redirectURL = window.location.hostname === "localhost"
           ? "http://localhost:3000"
-          : "https://zerodhaa-clone-dashboard.vercel.app/";
+          : process.env.MONGO_URL;
 
         setTimeout(() => {
           window.location.href = redirectURL;

@@ -33,13 +33,16 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { data } =await axios.post(
-        `${process.env.BACKEND_URL|| "http://localhost:3002"}/login`,
+      const { data } = await axios.post(
+        window.location.hostname === "localhost"
+          ? "http://localhost:3002/login"
+          : "https://zerodha-clone-backend-z8u8.onrender.com/login",
         {
           ...inputValue,
         },
-        {withCredentials: true}
+        { withCredentials: true }
       );
+      
       console.log(data);
 
       const { success, message } = data;
@@ -48,12 +51,12 @@ function Login() {
       handleSuccess(message);
 
       const redirectURL = window.location.hostname === "localhost"
-        ? "http://localhost:3000"
-        : "https://zerodhaa-clone-dashboard.vercel.app/";
+          ? "http://localhost:3000"
+          : process.env.REACT_APP_MONGO_URL;
 
-      setTimeout(() => {
-        window.location.href = redirectURL;
-      }, 1000);
+        setTimeout(() => {
+          window.location.href = redirectURL;
+        }, 1000);
     } else {
       handleError(message);
     }
