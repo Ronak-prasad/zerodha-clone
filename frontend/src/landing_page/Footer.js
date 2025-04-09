@@ -11,11 +11,11 @@ function Footer() {
               &copy; 2010 - 2025, Zerodha Broking Ltd.
               <br /> All rights reserved.
             </p>
-              <i class="fa fa-twitter" aria-hidden="true"></i>&nbsp;&nbsp;
-              <i class="fa fa-facebook-official" aria-hidden="true"></i>&nbsp;&nbsp;
-              <i class="fa fa-instagram" aria-hidden="true"></i>&nbsp;&nbsp;
-              <i class="fa fa-linkedin" aria-hidden="true"></i>&nbsp;&nbsp;
-              <i class="fa fa-telegram" aria-hidden="true"></i>&nbsp;&nbsp;
+              <i className="fa fa-twitter" aria-hidden="true"></i>&nbsp;&nbsp;
+              <i className="fa fa-facebook-official" aria-hidden="true"></i>&nbsp;&nbsp;
+              <i className="fa fa-instagram" aria-hidden="true"></i>&nbsp;&nbsp;
+              <i className="fa fa-linkedin" aria-hidden="true"></i>&nbsp;&nbsp;
+              <i className="fa fa-telegram" aria-hidden="true"></i>&nbsp;&nbsp;
 
           </div>
           <div className="col">
